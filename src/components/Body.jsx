@@ -11,29 +11,34 @@ const Body = () => {
   const userData = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const fetchUser = async () => {
-    if(userData) return;
+    if (userData && Object.keys(userData).length > 0) return;
+
     try {
-      const res = await axios.get(BASE_URL + "/profile/view", {
+      const res = await axios.get(`${BASE_URL}/profile/view`, {
         withCredentials: true,
       });
       dispatch(addUser(res.data));
     } catch (err) {
-      if (err.status === 401) {
+      if (err?.response?.status === 401) {
         navigate("/login");
+      } else {
+        console.error("Error fetching user:", err);
       }
     }
   };
 
   useEffect(() => {
-      fetchUser();
+    fetchUser();
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-base-200 text-white">
       <Navbar />
-      <Outlet />
+      <main className="flex-grow px-4 sm:px-10 md:px-16 py-6 animate-fade-in">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

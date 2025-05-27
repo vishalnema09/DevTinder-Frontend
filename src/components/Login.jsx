@@ -19,18 +19,13 @@ const Login = () => {
     try {
       const res = await axios.post(
         BASE_URL + "/login",
-        {
-          emailID,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
+        { emailID, password },
+        { withCredentials: true }
       );
       dispatch(addUser(res.data));
       return navigate("/");
     } catch (err) {
-      setError(err?.response?.data || "something went wrong");
+      setError(err?.response?.data || "Something went wrong");
     }
   };
 
@@ -49,82 +44,95 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center my-10">
-      <div className="card bg-base-300 w-96 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title justify-center">
-            {isLoginForm ? "Login" : "Sign Up"}
-          </h2>
+    <div className="flex justify-center items-center pt-18">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
+        <h2 className="text-2xl font-bold text-center mb-6" style={{ color: "#B22166" }}>
+          {isLoginForm ? "Login to Your Account" : "Create a New Account"}
+        </h2>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            isLoginForm ? handleLogin() : handleSignUp();
+          }}
+          className="space-y-4"
+        >
+          {!isLoginForm && (
+            <>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-gray-800">First Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter your first name"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B22166] text-black placeholder-black"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1 text-gray-800">Last Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter your last name"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B22166] text-black placeholder-black"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+            </>
+          )}
+
           <div>
-            {!isLoginForm && (
-              <>
-                <label className="form-control w-full max-w-xs my-2">
-                  <div className="label my-4">
-                    <span className="label-text">First Name</span>
-                  </div>
-                  <input
-                    type="text"
-                    value={firstName}
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs my-2">
-                  <div className="label my-4">
-                    <span className="label-text">Last Name</span>
-                  </div>
-                  <input
-                    type="text"
-                    value={lastName}
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </label>
-              </>
-            )}
-            <label className="form-control w-full max-w-xs my-4">
-              <div className="label my-4">
-                <span className="label-text">Email ID</span>
-              </div>
-              <input
-                type="text"
-                value={emailID}
-                // placeholder="Enter your email"
-                className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setEmailID(e.target.value)}
-              />
-            </label>
-            <label className="form-control w-full max-w-xs my-4">
-              <div className="label my-4">
-                <span className="label-text">Password</span>
-              </div>
-              <input
-                type="password"
-                value={password}
-                // placeholder="Enter your password"
-                className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </label>
+            <label className="block text-sm font-medium mb-1 text-gray-800">Email ID</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B22166] text-black placeholder-black"
+              value={emailID}
+              onChange={(e) => setEmailID(e.target.value)}
+              required
+            />
           </div>
-          <p className="text-red-500">{error}</p>
-          <div className="card-actions justify-center mt-4">
-            <button
-              className="btn btn-primary"
-              onClick={isLoginForm ? handleLogin : handleSignUp}
-            >
-              {isLoginForm ? "Login" : "Sign Up"}
-            </button>
+
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-800">Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B22166] text-black placeholder-black"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
-          <p
-            className="m-auto cursor-pointer py-2"
-            onClick={() => setIsLoginForm((value) => !value)}
+
+          {error && (
+            <div className="text-red-500 text-sm text-center mt-1">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full py-2 mt-2 rounded-md font-semibold text-white bg-[#B22166] hover:bg-[#9a1c59] transition duration-200"
           >
-            {isLoginForm
-              ? "New User? Signup Here"
-              : "Existing User? Login Here"}
+            {isLoginForm ? "Login" : "Sign Up"}
+          </button>
+
+          <p className="text-center mt-3 text-sm text-gray-700">
+            {isLoginForm ? "Don't have an account?" : "Already have an account?"}{" "}
+            <span
+              className="cursor-pointer underline"
+              onClick={() => setIsLoginForm((val) => !val)}
+              style={{ color: "#B22166" }}
+            >
+              {isLoginForm ? "Sign Up here" : "Login here"}
+            </span>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   );
