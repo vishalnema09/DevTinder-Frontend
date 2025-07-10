@@ -24,7 +24,7 @@ const Navbar = () => {
       {/* Logo Section */}
       <div className="flex items-center">
         <Link to="/" className="flex items-center gap-2 text-[#B22166] text-xl font-bold">
-          <img src="./public/logo.png" alt="Logo" className="h-4 w-auto" />
+          <img src="/logo.png" alt="Logo" className="h-4 w-auto" />
         </Link>
       </div>
 
